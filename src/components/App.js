@@ -129,16 +129,52 @@ const App = () => {
   const [score, setScore] = useState(0);
 
   const changeChar = () => {
-    
+    const idx = Math.floor(Math.random() * characters.length);
+    const op1 = Math.floor(Math.random() * characters.length);
+    const op2 = Math.floor(Math.random() * characters.length);
+    const op3 = Math.floor(Math.random() * characters.length);
+
+    setCurrChar({
+      ...currChar,
+      name: characters[idx].name,
+      role: characters[idx].role,
+      abilities: characters[idx].abilities,
+      options: shuffle([
+        characters[op1],
+        characters[op2],
+        characters[op3],
+        characters[idx],
+      ])
+    })
+
   };
 
   const scoreHandler = (e) => {
-   
+    if (e.target.textContent === currChar.name) {
+      setScore(score + 1);
+    } else {
+      setScore(score - 1);
+    }
+    changeChar();
   };
 
+  const shuffle = (array) => {
+    let currIndex = array.length;
+    let randomIndex;
+
+    while (currIndex != 0) {
+      randomIndex = Math.floor(Math.random() * currIndex);
+      currIndex--;
+      [array[currIndex], array[randomIndex]] = [array[randomIndex], array[currIndex]];
+    }
+    return array;
+
+  }
+
   useEffect(() => {
-   
-  });
+    changeChar();
+
+  }, []);
   return (
     <div id="main">
       <div className="container">
@@ -150,7 +186,7 @@ const App = () => {
           {currChar.abilities.join()}
           <div className="options">
             {currChar.options.map((option) => (
-              <button   onClick={scoreHandler}>
+              <button onClick={scoreHandler}>
                 {option.name}
               </button>
             ))}
